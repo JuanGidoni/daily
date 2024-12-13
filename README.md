@@ -1,15 +1,24 @@
 # daily
 A daily commit with auto start bat script on windows
 
-## Modificar daily-commit.js
+## Para usar este script:
 
-Modifica el script `daily-commit.js` con tus datos.
+- Clonar repo
+```bash
+  git clone https://github.com/JuanGidoni/daily
+```
+- Instalar dependencias
+```bash
+npm install simple-git dayjs fs
+```
 
-## Ubicar el .bat en la carpeta de Inicio de Windows
+- Modifica el script `daily-commit.js` con tus datos.
+- Ubicar el .bat en la carpeta de Inicio de Windows, Como? A continuación te lo explico.
 
-Para ejecutar este archivo al inicio de Windows, debes colocarlo en la carpeta "Startup". Esta carpeta contiene todos los programas que Windows ejecuta automáticamente al encenderse.
+### Para ejecutar este archivo al inicio de Windows, debes colocarlo en la carpeta "Startup". Esta carpeta contiene todos los programas que Windows ejecuta automáticamente al encenderse.
 
-### Pasos:
+Pasos:
+
 - Presiona Win + R para abrir la ventana de Ejecutar.
 - Escribe:
 ```cmd

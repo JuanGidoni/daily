@@ -3,4 +3,4 @@
 Commit #1
 [------------------------------] 0% (1/365 commits)
 
-> "Write code for humans, not just for machines."
+> "A good frontend engineer never stops asking 'Why?'"

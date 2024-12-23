@@ -4,8 +4,8 @@ const simpleGit = require("simple-git");
 const dayjs = require("dayjs");
 const { PHRASES } = require("./phrases");
 
-// Configuration
-const REPO_PATH = "./"; // Repository path
+// Configuración
+const REPO_PATH = "./"; // Ruta del repositorio
 const README_PATH = path.join(REPO_PATH, "README.md");
 const LOG_FILE = path.join(REPO_PATH, "log.json");
 
@@ -13,9 +13,9 @@ const git = simpleGit(REPO_PATH);
 
 (async () => {
   try {
-    // 1. Ensure the log file exists and has the correct structure
+    // 1. Asegurarse de que el archivo de log exista y tenga la estructura correcta
     if (!fs.existsSync(LOG_FILE)) {
-      console.log("Log file not found, creating a new one...");
+      console.log("Archivo de log no encontrado, creando uno nuevo...");
       fs.writeFileSync(
         LOG_FILE,
         JSON.stringify({ commits: [], alreadyAdded: [] }, null, 2)
@@ -24,7 +24,7 @@ const git = simpleGit(REPO_PATH);
 
     const logData = JSON.parse(fs.readFileSync(LOG_FILE, "utf8"));
 
-    // Ensure logData has commits and alreadyAdded arrays
+    // Asegurarse de que logData tenga los arrays commits y alreadyAdded
     if (!logData.commits || !Array.isArray(logData.commits)) {
       logData.commits = [];
     }
@@ -34,53 +34,80 @@ const git = simpleGit(REPO_PATH);
 
     const today = dayjs().format("YYYY-MM-DD");
 
-    // Exit if a commit was already made today
+    // Si ya se hizo un commit hoy, salir
     if (logData.commits.includes(today)) {
-      console.log("A commit has already been made today. Exiting...");
+      console.log("Ya se realizó un commit hoy. Saliendo...");
       return;
     }
 
-    // 2. Pull the latest changes from the repository
-    console.log("Updating repository...");
+    // 2. Actualizar el repositorio
+    console.log("Actualizando repositorio...");
     await git.pull();
 
-    // 3. Filter phrases to avoid duplicates
+    // 3. Filtrar frases para evitar duplicados
     const availablePhrases = PHRASES.filter(
       (phrase) => !logData.alreadyAdded.includes(phrase)
     );
 
     if (availablePhrases.length === 0) {
-      console.log("No new phrases available. Add more phrases to PHRASES.");
+      console.log(
+        "No hay frases nuevas disponibles. Agrega más frases a PHRASES."
+      );
       return;
     }
 
-    // Pick a random phrase and add it to README.md
+    // Escoger una frase aleatoria y agregarla al README.md
     const randomPhrase =
       availablePhrases[Math.floor(Math.random() * availablePhrases.length)];
     const currentContent = fs.existsSync(README_PATH)
       ? fs.readFileSync(README_PATH, "utf8")
       : "";
-    const newContent = `${currentContent}\n\n${randomPhrase}`;
-    fs.writeFileSync(README_PATH, newContent, "utf8");
-    console.log(`Phrase added to README.md: "${randomPhrase}"`);
 
-    // 4. Commit and push changes (add all files)
-    console.log("Committing and pushing all changes...");
-    await git.add("*"); // Stage all changes in the repository
+    // Contador de commits
+    const commitCount = logData.commits.length + 1; // El contador será la cantidad de commits realizados
+    const commitBar = createCommitProgressBar(commitCount);
+
+    // Nuevo contenido para el README
+    const newContent = `${currentContent}
+    
+# Daily Development Check-ins
+
+Commit #${commitCount}
+${commitBar}
+
+> "${randomPhrase}"`;
+
+    fs.writeFileSync(README_PATH, newContent, "utf8");
+    console.log(`Frase agregada al README.md: "${randomPhrase}"`);
+
+    // 4. Hacer commit y push de todos los cambios
+    console.log("Haciendo commit y push de todos los cambios...");
+    await git.add("*"); // Agregar todos los archivos modificados
     await git.commit(randomPhrase);
     await git.push();
 
-    // 5. Pull the latest changes to ensure synchronization with remote
-    console.log("Pulling the latest changes to avoid conflicts...");
-    await git.pull();
-
-    // 6. Update the log
+    // 5. Actualizar el log
     logData.commits.push(today);
     logData.alreadyAdded.push(randomPhrase);
     fs.writeFileSync(LOG_FILE, JSON.stringify(logData, null, 2));
 
-    console.log("Commit successfully completed and repository is up to date.");
+    console.log("Commit realizado con éxito y repositorio actualizado.");
   } catch (error) {
-    console.error("Error during execution:", error);
+    console.error("Error durante la ejecución:", error);
   }
 })();
+
+// Función para crear la barra de progreso del contador de commits
+function createCommitProgressBar(commitCount) {
+  const totalCommits = 100; // Total de commits para que el progreso sea sobre 100
+  const percentage = Math.min(commitCount / totalCommits, 1); // Asegurarse de que no se pase de 100%
+  const barLength = 30; // Longitud de la barra de progreso
+  const filledLength = Math.round(barLength * percentage); // Longitud del relleno
+
+  const filled = "=".repeat(filledLength); // Parte rellena de la barra
+  const empty = "-".repeat(barLength - filledLength); // Parte vacía de la barra
+
+  return `[${filled}${empty}] ${Math.round(
+    percentage * 100
+  )}% (${commitCount}/${totalCommits} commits)`;
+}

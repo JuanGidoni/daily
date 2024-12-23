@@ -1,56 +1,82 @@
-const fs = require('fs');
-const path = require('path');
-const simpleGit = require('simple-git');
-const dayjs = require('dayjs');
+const fs = require("fs");
+const path = require("path");
+const simpleGit = require("simple-git");
+const dayjs = require("dayjs");
+const { PHRASES } = require("./phrases");
 
-// Configuración
-const REPO_PATH = './'; // Ruta al repositorio
-const README_PATH = path.join(REPO_PATH, 'README.md');
-const LOG_FILE = path.join(REPO_PATH, 'log.json');
-const PHRASES = [/* Array de 370 frases aquí */];
+// Configuration
+const REPO_PATH = "./"; // Repository path
+const README_PATH = path.join(REPO_PATH, "README.md");
+const LOG_FILE = path.join(REPO_PATH, "log.json");
+
 const git = simpleGit(REPO_PATH);
 
 (async () => {
   try {
-    // 1. Verificar el archivo de log
+    // 1. Ensure the log file exists and has the correct structure
     if (!fs.existsSync(LOG_FILE)) {
-      fs.writeFileSync(LOG_FILE, JSON.stringify({ commits: [] }, null, 2));
+      console.log("Log file not found, creating a new one...");
+      fs.writeFileSync(
+        LOG_FILE,
+        JSON.stringify({ commits: [], alreadyAdded: [] }, null, 2)
+      );
     }
 
-    const logData = JSON.parse(fs.readFileSync(LOG_FILE, 'utf8'));
-    const today = dayjs().format('YYYY-MM-DD');
+    const logData = JSON.parse(fs.readFileSync(LOG_FILE, "utf8"));
 
-    // Si ya se realizó un commit hoy, salir
+    // Ensure logData has commits and alreadyAdded arrays
+    if (!logData.commits || !Array.isArray(logData.commits)) {
+      logData.commits = [];
+    }
+    if (!logData.alreadyAdded || !Array.isArray(logData.alreadyAdded)) {
+      logData.alreadyAdded = [];
+    }
+
+    const today = dayjs().format("YYYY-MM-DD");
+
+    // Exit if a commit was already made today
     if (logData.commits.includes(today)) {
-      console.log('Ya se realizó un commit hoy. Saliendo...');
+      console.log("A commit has already been made today. Exiting...");
       return;
     }
 
-    // 2. Actualizar el repositorio
-    console.log('Actualizando el repositorio...');
+    // 2. Pull the latest changes from the repository
+    console.log("Updating repository...");
     await git.pull();
 
-    // 3. Modificar el archivo README.md
-    const randomPhrase = PHRASES[Math.floor(Math.random() * PHRASES.length)];
-    const currentContent = fs.existsSync(README_PATH)
-      ? fs.readFileSync(README_PATH, 'utf8')
-      : '';
-    const newContent = `${currentContent}\n\n${randomPhrase}`;
-    fs.writeFileSync(README_PATH, newContent, 'utf8');
-    console.log(`Frase agregada al README.md: "${randomPhrase}"`);
+    // 3. Filter phrases to avoid duplicates
+    const availablePhrases = PHRASES.filter(
+      (phrase) => !logData.alreadyAdded.includes(phrase)
+    );
 
-    // 4. Hacer commit y push
-    console.log('Haciendo commit y push...');
+    if (availablePhrases.length === 0) {
+      console.log("No new phrases available. Add more phrases to PHRASES.");
+      return;
+    }
+
+    // Pick a random phrase and add it to README.md
+    const randomPhrase =
+      availablePhrases[Math.floor(Math.random() * availablePhrases.length)];
+    const currentContent = fs.existsSync(README_PATH)
+      ? fs.readFileSync(README_PATH, "utf8")
+      : "";
+    const newContent = `${currentContent}\n\n${randomPhrase}`;
+    fs.writeFileSync(README_PATH, newContent, "utf8");
+    console.log(`Phrase added to README.md: "${randomPhrase}"`);
+
+    // 4. Commit and push changes
+    console.log("Committing and pushing changes...");
     await git.add(README_PATH);
     await git.commit(randomPhrase);
     await git.push();
 
-    // 5. Registrar el commit en el log
+    // 5. Update the log
     logData.commits.push(today);
+    logData.alreadyAdded.push(randomPhrase);
     fs.writeFileSync(LOG_FILE, JSON.stringify(logData, null, 2));
 
-    console.log('Commit realizado con éxito.');
+    console.log("Commit successfully completed.");
   } catch (error) {
-    console.error('Error durante la ejecución:', error);
+    console.error("Error during execution:", error);
   }
 })();

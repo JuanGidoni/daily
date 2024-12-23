@@ -1,0 +1,26 @@
+{
+  "name": "daily",
+  "version": "1.0.0",
+  "description": "a daily commit to github repo on startup of the computer",
+  "main": "daily-commit.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JuanGidoni/daily.git"
+  },
+  "keywords": [
+    "js"
+  ],
+  "author": "JuanGidoni",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JuanGidoni/daily/issues"
+  },
+  "homepage": "https://github.com/JuanGidoni/daily#readme",
+  "dependencies": {
+    "dayjs": "^1.11.13",
+    "simple-git": "^3.27.0"
+  }
+}

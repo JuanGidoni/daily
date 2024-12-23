@@ -99,7 +99,7 @@ ${commitBar}
 
 // Función para crear la barra de progreso del contador de commits
 function createCommitProgressBar(commitCount) {
-  const totalCommits = 100; // Total de commits para que el progreso sea sobre 100
+  const totalCommits = 365; // Total de commits para que el progreso sea sobre 100
   const percentage = Math.min(commitCount / totalCommits, 1); // Asegurarse de que no se pase de 100%
   const barLength = 30; // Longitud de la barra de progreso
   const filledLength = Math.round(barLength * percentage); // Longitud del relleno

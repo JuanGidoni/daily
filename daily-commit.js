@@ -5,7 +5,7 @@ const dayjs = require("dayjs");
 const { PHRASES } = require("./phrases");
 
 // Configuración
-const REPO_PATH = "./"; // Ruta del repositorio
+const REPO_PATH = "./"; // Ruta al repositorio
 const README_PATH = path.join(REPO_PATH, "README.md");
 const LOG_FILE = path.join(REPO_PATH, "log.json");
 const git = simpleGit(REPO_PATH);
@@ -88,10 +88,7 @@ ${commitBar}
     // 4. Hacer commit y push de todos los cambios
     console.log("Haciendo commit y push de todos los cambios...");
     await git.add("."); // Usamos `git add .` para agregar todos los cambios
-    await git.commit(randomPhrase);
-
-    // Asegurarse de que `log.json` no sea parte del commit
-    await git.reset(["log.json"]); // Desmarcar `log.json` para que no se agregue al commit
+    await git.commit(randomPhrase); // El mensaje de commit será la frase agregada al README.md
 
     await git.push();
 

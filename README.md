@@ -3,4 +3,4 @@
 Commit #1
 [------------------------------] 0% (1/365 commits)
 
-> "Good UX is invisible; great UX is unforgettable."
+> "Your creativity will turn ideas into incredible experiences."

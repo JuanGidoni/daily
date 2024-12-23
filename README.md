@@ -3,4 +3,4 @@
 Commit #1
 [------------------------------] 0% (1/365 commits)
 
-> "Every new challenge is a step toward mastery."
+> "Write code for humans, not just for machines."

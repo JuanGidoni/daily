@@ -87,7 +87,7 @@ ${commitBar}
 
     // 4. Hacer commit y push de todos los cambios
     console.log("Haciendo commit y push de todos los cambios...");
-    await git.add("*"); // Agregar todos los archivos modificados
+    await git.add("."); // Agregar todos los archivos modificados
     await git.commit(randomPhrase);
     await git.push();
 

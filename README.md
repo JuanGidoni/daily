@@ -1,13 +1,17 @@
 # daily
+
 A daily commit with auto start bat script on windows
 
 ## Para usar este script:
 
 - Clonar repo
+
 ```bash
   git clone https://github.com/JuanGidoni/daily
 ```
+
 - Instalar dependencias
+
 ```bash
 npm install simple-git dayjs fs
 ```
@@ -21,8 +25,13 @@ Pasos:
 
 - Presiona Win + R para abrir la ventana de Ejecutar.
 - Escribe:
+
 ```cmd
 shell:startup
 ```
+
 - Presiona Enter. Esto abrirá la carpeta de inicio del usuario actual.
 - Copia y pega tu archivo run-daily-commit.bat en esta carpeta.
+
+
+You're not just a developer; you're a creator of experiences.

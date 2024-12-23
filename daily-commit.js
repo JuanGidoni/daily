@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const simpleGit = require("simple-git");
 const dayjs = require("dayjs");
-const { PHRASES } = require("./phrases");
+const PHRASES = require("./phrases");
 
 // Configuración
 const REPO_PATH = "./"; // Ruta al repositorio

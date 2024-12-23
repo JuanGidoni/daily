@@ -1,4 +1,4 @@
-export const PHRASES = [
+module.exports = [
   "Design is not just how it looks, but how it works: clean code is the key!",
   "Every line of code is a step toward a more user-friendly interface.",
   "Frontend is the art of turning complex ideas into simple experiences.",

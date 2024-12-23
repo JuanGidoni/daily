@@ -87,15 +87,15 @@ ${commitBar}
 
     // 4. Hacer commit y push de todos los cambios
     console.log("Haciendo commit y push de todos los cambios...");
-    await git.add("."); // Usamos `git add .` para agregar todos los cambios
-    await git.commit(randomPhrase); // El mensaje de commit será la frase agregada al README.md
-
-    await git.push();
 
     // 5. Actualizar el log
     logData.commits.push(today);
     logData.alreadyAdded.push(randomPhrase);
     fs.writeFileSync(LOG_FILE, JSON.stringify(logData, null, 2));
+
+    await git.add("."); // Usamos `git add .` para agregar todos los cambios
+    await git.commit(randomPhrase); // El mensaje de commit será la frase agregada al README.md
+    await git.push();
 
     console.log("Commit realizado con éxito y repositorio actualizado.");
   } catch (error) {

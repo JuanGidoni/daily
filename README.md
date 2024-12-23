@@ -35,3 +35,5 @@ shell:startup
 
 
 You're not just a developer; you're a creator of experiences.
+
+Every challenge in frontend is an opportunity to grow.

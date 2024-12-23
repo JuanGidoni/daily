@@ -8,7 +8,6 @@ const { PHRASES } = require("./phrases");
 const REPO_PATH = "./"; // Ruta del repositorio
 const README_PATH = path.join(REPO_PATH, "README.md");
 const LOG_FILE = path.join(REPO_PATH, "log.json");
-
 const git = simpleGit(REPO_PATH);
 
 (async () => {
@@ -22,7 +21,18 @@ const git = simpleGit(REPO_PATH);
       );
     }
 
-    const logData = JSON.parse(fs.readFileSync(LOG_FILE, "utf8"));
+    // Intentar leer el archivo JSON
+    let logData = {};
+    try {
+      logData = JSON.parse(fs.readFileSync(LOG_FILE, "utf8"));
+    } catch (error) {
+      // Si ocurre un error al parsear, inicializamos el archivo con datos válidos
+      console.log(
+        "Error al leer el archivo log.json, inicializando con datos predeterminados..."
+      );
+      logData = { commits: [], alreadyAdded: [] };
+      fs.writeFileSync(LOG_FILE, JSON.stringify(logData, null, 2));
+    }
 
     // Asegurarse de que logData tenga los arrays commits y alreadyAdded
     if (!logData.commits || !Array.isArray(logData.commits)) {
@@ -59,18 +69,13 @@ const git = simpleGit(REPO_PATH);
     // Escoger una frase aleatoria y agregarla al README.md
     const randomPhrase =
       availablePhrases[Math.floor(Math.random() * availablePhrases.length)];
-    const currentContent = fs.existsSync(README_PATH)
-      ? fs.readFileSync(README_PATH, "utf8")
-      : "";
 
     // Contador de commits
     const commitCount = logData.commits.length + 1; // El contador será la cantidad de commits realizados
     const commitBar = createCommitProgressBar(commitCount);
 
-    // Nuevo contenido para el README
-    const newContent = `${currentContent}
-    
-# Daily Development Check-ins
+    // Nuevo contenido para el README, reemplazando todo el contenido
+    const newContent = `# Daily Development Check-ins
 
 Commit #${commitCount}
 ${commitBar}
@@ -99,7 +104,7 @@ ${commitBar}
 
 // Función para crear la barra de progreso del contador de commits
 function createCommitProgressBar(commitCount) {
-  const totalCommits = 365; // Total de commits para que el progreso sea sobre 100
+  const totalCommits = 100; // Total de commits para que el progreso sea sobre 100
   const percentage = Math.min(commitCount / totalCommits, 1); // Asegurarse de que no se pase de 100%
   const barLength = 30; // Longitud de la barra de progreso
   const filledLength = Math.round(barLength * percentage); // Longitud del relleno

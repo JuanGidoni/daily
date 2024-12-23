@@ -64,18 +64,22 @@ const git = simpleGit(REPO_PATH);
     fs.writeFileSync(README_PATH, newContent, "utf8");
     console.log(`Phrase added to README.md: "${randomPhrase}"`);
 
-    // 4. Commit and push changes
-    console.log("Committing and pushing changes...");
-    await git.add(README_PATH);
+    // 4. Commit and push changes (add all files)
+    console.log("Committing and pushing all changes...");
+    await git.add("*"); // Stage all changes in the repository
     await git.commit(randomPhrase);
     await git.push();
 
-    // 5. Update the log
+    // 5. Pull the latest changes to ensure synchronization with remote
+    console.log("Pulling the latest changes to avoid conflicts...");
+    await git.pull();
+
+    // 6. Update the log
     logData.commits.push(today);
     logData.alreadyAdded.push(randomPhrase);
     fs.writeFileSync(LOG_FILE, JSON.stringify(logData, null, 2));
 
-    console.log("Commit successfully completed.");
+    console.log("Commit successfully completed and repository is up to date.");
   } catch (error) {
     console.error("Error during execution:", error);
   }

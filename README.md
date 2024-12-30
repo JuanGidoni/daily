@@ -1,6 +1,6 @@
 # Daily Development Check-ins
 
-Commit #7
-[=-----------------------------] 2% (7/365 commits)
+Commit #8
+[=-----------------------------] 2% (8/365 commits)
 
-> "Frontend development is where creativity meets functionality."
+> "Every website you build is a part of your legacy."

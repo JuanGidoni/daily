@@ -1,8 +1,10 @@
 {
   "commits": [
-    "2025-01-01"
+    "2025-01-01",
+    "2025-01-02"
   ],
   "alreadyAdded": [
-    "A simple design is more powerful than a complex one."
+    "A simple design is more powerful than a complex one.",
+    "Write code as if the next developer is a beginner."
   ]
 }

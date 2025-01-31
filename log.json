@@ -29,7 +29,8 @@
     "2025-01-27",
     "2025-01-28",
     "2025-01-29",
-    "2025-01-30"
+    "2025-01-30",
+    "2025-01-31"
   ],
   "alreadyAdded": [
     "A simple design is more powerful than a complex one.",
@@ -61,6 +62,7 @@
     "Believe in your ability to create amazing things.",
     "Success in frontend lies in the smallest details.",
     "Great user experiences start with great frontend engineering.",
-    "Your work as a frontend engineer shapes how people experience the web."
+    "Your work as a frontend engineer shapes how people experience the web.",
+    "Every component you design tells a part of the story."
   ]
 }
